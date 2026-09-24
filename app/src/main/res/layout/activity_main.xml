@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gallery"
+    tools:context=".MainActivity">
+
+    <!-- Barra de Herramientas Superior -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        app:titleTextColor="@color/color_black"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Visor de Fotos -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardVisor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:id="@+id/visorContenedor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter" />
+
+            <com.example.proyecto_1_dep_galeria.DrawingView
+                android:id="@+id/drawingView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+            <!-- Indicador flotante de Favorito -->
+            <ImageView
+                android:id="@+id/ivFavOverlay"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="12dp"
+                android:src="@drawable/ic_heart_filled"
+                android:visibility="gone" />
+
+            <!-- Flechas de navegación (se ocultan en modo edición) -->
+            <ImageButton
+                android:id="@+id/btnAnterior"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_circle_button"
+                android:src="@android:drawable/ic_media_previous"
+                app:tint="@android:color/white" />
+
+            <ImageButton
+                android:id="@+id/btnSiguiente"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_circle_button"
+                android:src="@android:drawable/ic_media_next"
+                app:tint="@android:color/white" />
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Contenedor Inferior: Galería vs Panel de Edición -->
+    <FrameLayout
+        android:id="@+id/bottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- 1. Panel de Modo Galería (Ver fotos) -->
+        <LinearLayout
+            android:id="@+id/panelGaleria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFavorito"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="♡ Fav"
+                app:icon="@drawable/ic_heart_outline"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditar"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="✎ Editar"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEliminar"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🗑 Borrar"
+                android:textColor="@color/color_red"
+                app:iconGravity="textStart" />
+        </LinearLayout>
+
+        <!-- 2. Panel Unificado de Edición -->
+        <LinearLayout
+            android:id="@+id/panelEdicion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp">
+
+            <!-- Fila Superior del Editor: Cancelar, Estado, Guardar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelarEdicion"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✕ Salir"
+                    android:textColor="#6B7280" />
+
+                <TextView
+                    android:id="@+id/tvTituloEdicion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Modo Edición"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_black" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGuardarEdicion"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💾 Guardar" />
+            </LinearLayout>
+
+            <!-- Paleta de Colores para el Pincel -->
+            <LinearLayout
+                android:id="@+id/rowColores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingVertical="4dp">
+
+                <View
+                    android:id="@+id/colorRojo"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_red" />
+
+                <View
+                    android:id="@+id/colorAzul"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_blue" />
+
+                <View
+                    android:id="@+id/colorVerde"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_green" />
+
+                <View
+                    android:id="@+id/colorAmarillo"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_yellow" />
+
+                <View
+                    android:id="@+id/colorNegro"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_black" />
+
+                <View
+                    android:id="@+id/colorBlanco"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_color_circle"
+                    android:backgroundTint="@color/color_white" />
+            </LinearLayout>
+
+            <!-- Barra de Herramientas de Edición -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHerramientaDibujar"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="2dp"
+                    android:text="✏ Pincel"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHerramientaRecortar"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="2dp"
+                    android:text="✂ Recortar"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHerramientaRotar"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="2dp"
+                    android:text="↻ Rotar"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHerramientaDeshacer"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="2dp"
+                    android:text="↩ Deshacer"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
